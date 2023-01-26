@@ -1,0 +1,19 @@
+version: "3.0"
+services:
+  db:
+    container_name: "database"
+    image: postgres:14.1-alpine
+    restart: always
+    volumes:
+      - ./pg_db:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Daimondi12
+      - POSTGRES_DB=Flask_app
+    ports:
+      - "5432:5432"
+    networks:
+      - custom
+networks:
+  custom:
+    driver: bridge
