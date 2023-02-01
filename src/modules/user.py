@@ -2,40 +2,31 @@ from logging import getLogger
 from typing import Union
 from uuid import UUID
 from fastapi import APIRouter
-from fastapi import Depends
-from fastapi import HTTPException
-from fastapi_jwt_auth import AuthJWT
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
-from .models.user import ShowUser
-from .models.user import UserCreate
-from src.serializer.dals_user import UserDAL, LoginDAL
-from src.database.config import get_db
-from .schemas.authentication import LoginModel
+
+from src.schemas.authentication import ShowSignUp, LoginModel, ShowLogin
+from src.schemas.authentication import SignUpModel
+from src.serializer.dal_user import UserDAL
 
 logger = getLogger(__name__)
 
-user_route = APIRouter()
 
-
-async def login_user(body: LoginModel, db, Authorize: AuthJWT = Depends()):
+async def logged_in_user(user: LoginModel, db) -> ShowLogin:
     async with db as session:
         async with session.begin():
-            login_dal = LoginDAL(session)
-            login = await login_dal.login_user(LoginModel)
-            return login
+            user_dal = UserDAL(session)
+            user = await user_dal.login_user(
+                nickname=user.nickname)
 
-
-async def _create_new_user(body: UserCreate, db) -> ShowUser:
+async def create_new_user(user: SignUpModel, db) -> ShowSignUp:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
             user = await user_dal.create_user(
-                nickname=body.nickname,
-                email_address=body.email_address,
-                password=body.password
+                nickname=user.nickname,
+                email_address=user.email_address,
+                password=user.password
             )
-            return ShowUser(
+            return ShowSignUp(
                 user_id=user.user_id,
                 nickname=user.nickname,
                 email_address=user.email_address,
@@ -43,7 +34,7 @@ async def _create_new_user(body: UserCreate, db) -> ShowUser:
             )
 
 
-async def _delete_user(user_id, db) -> Union[UUID, None]:
+async def delete_user(user_id, db) -> Union[UUID, None]:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
@@ -53,8 +44,8 @@ async def _delete_user(user_id, db) -> Union[UUID, None]:
             return deleted_user_id
 
 
-async def _update_user(
-        updated_user_params: dict, user_id: UUID, db
+async def update_user(
+    updated_user_params: dict, user_id: UUID, db
 ) -> Union[UUID, None]:
     async with db as session:
         async with session.begin():
@@ -65,7 +56,7 @@ async def _update_user(
             return updated_user_id
 
 
-async def _get_user_by_id(user_id, db) -> Union[ShowUser, None]:
+async def get_user_by_id(user_id, db) -> Union[ShowSignUp, None]:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
@@ -73,9 +64,10 @@ async def _get_user_by_id(user_id, db) -> Union[ShowUser, None]:
                 user_id=user_id,
             )
             if user is not None:
-                return ShowUser(
+                return ShowSignUp(
                     user_id=user.user_id,
                     nickname=user.nickname,
                     email_address=user.email_address,
                     is_active=user.is_active,
                 )
+

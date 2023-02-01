@@ -1,15 +1,18 @@
 import asyncio
 import os
+from typing import Any
+from typing import Generator
 
 import asyncpg
 import pytest
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from starlette.testclient import TestClient
 
 from src.core import settings
-from src.database.config import get_db
 from src.core.run import app
+from src.database.config import get_db
 
 CLEAN_TABLES = [
     "users",
@@ -30,9 +33,7 @@ async def run_migrations():
     os.system("alembic upgrade heads")
 
 
-pytest.fixture(scope="session")
-
-
+@pytest.fixture(scope="session")
 async def async_session_test():
     engine = create_async_engine(settings.TEST_DATABASE_URL, future=True, echo=True)
     async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
@@ -65,7 +66,7 @@ async def _get_test_db():
 
 
 @pytest.fixture(scope="function")
-async def client():
+async def client() -> Generator[TestClient, Any, None]:
     """
     Create a new FastAPI TestClient that uses the `db_session` fixture to override
     the `get_db` dependency that is injected into routes.
@@ -99,16 +100,22 @@ async def get_user_from_database(asyncpg_pool):
 @pytest.fixture
 async def create_user_in_database(asyncpg_pool):
     async def create_user_in_database(
-            user_id: str, name: str, surname: str, email: str, is_active: bool
+            user_id: str,
+            name: str,
+            surname: str,
+            email: str,
+            is_active: bool,
+            hashed_password: str,
     ):
         async with asyncpg_pool.acquire() as connection:
             return await connection.execute(
-                """INSERT INTO users VALUES ($1, $2, $3, $4, $5)""",
+                """INSERT INTO users VALUES ($1, $2, $3, $4, $5, $6)""",
                 user_id,
                 name,
                 surname,
                 email,
                 is_active,
+                hashed_password,
             )
 
     return create_user_in_database

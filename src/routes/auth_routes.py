@@ -1,14 +1,14 @@
-from fastapi_jwt_auth import AuthJWT
-
-from src.models.user import User
-from fastapi import APIRouter, status, Depends
-from fastapi.exceptions import HTTPException
-from werkzeug.security import generate_password_hash, check_password_hash
-from fastapi.encoders import jsonable_encoder
-
-from src.schemas.authentication import LoginModel
-
-auth_router = APIRouter(prefix='/auth', tags=['auth'])
+# from fastapi_jwt_auth import AuthJWT
+#
+# from src.models.user import User
+# from fastapi import APIRouter, status, Depends
+# from fastapi.exceptions import HTTPException
+# from werkzeug.security import generate_password_hash, check_password_hash
+# from fastapi.encoders import jsonable_encoder
+#
+# from src.schemas.authentication import LoginModel
+#
+# auth_router = APIRouter(prefix='/auth', tags=['auth'])
 
 
 # @auth_router.post('/signup')
@@ -70,22 +70,22 @@ auth_router = APIRouter(prefix='/auth', tags=['auth'])
 #             return new_user
 
 
-@auth_router.post('/login')
-async def login(user: LoginModel, db, Authorize: AuthJWT = Depends()):
-    async with db as session:
-        async with session.begin():
-            db_user = await session.query(User).filter(User.nickname == user.nickname).first()
-
-            if db_user and check_password_hash(db_user.password, user.password):
-                access_token = Authorize.create_access_token(subject=db_user.nickname)
-                refresh_token = Authorize.create_refresh_token(subject=db_user.nickname)
-
-                response = {
-                    "access": access_token,
-                    "refresh": refresh_token
-                }
-
-                return await jsonable_encoder(response)
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail="Invalid nickname Or Password"
-                                )
+# @auth_router.post('/login')
+# async def login(user: LoginModel, db, Authorize: AuthJWT = Depends()):
+#     async with db as session:
+#         async with session.begin():
+#             db_user = await session.query(User).filter(User.nickname == user.nickname).first()
+#
+#             if db_user and check_password_hash(db_user.password, user.password):
+#                 access_token = Authorize.create_access_token(subject=db_user.nickname)
+#                 refresh_token = Authorize.create_refresh_token(subject=db_user.nickname)
+#
+#                 response = {
+#                     "access": access_token,
+#                     "refresh": refresh_token
+#                 }
+#
+#                 return await jsonable_encoder(response)
+#             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+#                                 detail="Invalid nickname Or Password"
+#                                 )

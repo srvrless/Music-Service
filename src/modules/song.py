@@ -1,42 +1,31 @@
-import os
-from logging import getLogger
 from typing import Union
 from uuid import UUID
-
-from fastapi import APIRouter
-from fastapi import Depends
-from fastapi import HTTPException
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.models.song import DeleteSongResponse
-from src.models.song import ShowSong
-from src.models.song import SongCreate
-from src.serializer.dals_user import SongDAL
-from src.database.config import get_db
-
-logger = getLogger(__name__)
-
-song_route = APIRouter(prefix='/song', tags=['song'])
+from src.schemas.song import SongModel
+from src.schemas.song import SongCreate
+from src.serializer.dal_song import SongDAL
 
 
-async def _create_new_song(body: SongCreate, db) -> ShowSong:
+async def create_new_song(body: SongCreate, db) -> SongModel:
     async with db as session:
         async with session.begin():
             song_dal = SongDAL(session)
             song = await song_dal.create_song(
                 name=body.name,
                 creator=body.creator,
+                song_file=body.song_file,
+                song_status=body.song_status,
+                verified=body.verified
             )
-            return ShowSong(
+            return SongModel(
                 song_id=song.song_id,
                 name=song.name,
-                creator=song.creator,
-                is_liked=song.is_liked,
+                song_file=song.song_file,
+                song_status=song.song_status,
+                verified=body.verified
             )
 
 
-async def _delete_song(song_id, db) -> Union[UUID, None]:
+async def delete_song(song_id, db) -> Union[UUID, None]:
     async with db as session:
         async with session.begin():
             song_dal = SongDAL(session)
@@ -46,7 +35,7 @@ async def _delete_song(song_id, db) -> Union[UUID, None]:
             return deleted_song_id
 
 
-async def _get_song_by_id(song_id, db) -> Union[ShowSong, None]:
+async def get_song_by_id(song_id, db) -> Union[SongModel, None]:
     async with db as session:
         async with session.begin():
             song_dal = SongDAL(session)
@@ -54,12 +43,9 @@ async def _get_song_by_id(song_id, db) -> Union[ShowSong, None]:
                 song_id=song_id,
             )
             if song is not None:
-                return ShowSong(
+                return SongModel(
                     song_id=song.song_id,
                     name=song.name,
-                    creator=song.creator,
-                    is_liked=song.is_liked,
+                    song_file=song.song_file,
+                    song_status=song.song_status,
                 )
-
-
-
