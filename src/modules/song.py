@@ -25,7 +25,7 @@ async def create_new_song(body: SongCreate, db) -> SongModel:
             )
 
 
-async def delete_song(song_id, db) -> Union[UUID, None]:
+async def delete_sing(song_id, db) -> Union[UUID, None]:
     async with db as session:
         async with session.begin():
             song_dal = SongDAL(session)

@@ -69,7 +69,7 @@ async def get_user(user_id: UUID, db: AsyncSession = Depends(get_db)) -> ShowSig
 
 @user_route.patch("/", response_model=UpdatedUserResponse)
 async def update_user_by_id(user_id: UUID, body: UpdateUserRequest, db: AsyncSession = Depends(get_db)
-) -> UpdatedUserResponse:
+                            ) -> UpdatedUserResponse:
     updated_user_params = body.dict(exclude_none=True)
     if updated_user_params == {}:
         raise HTTPException(

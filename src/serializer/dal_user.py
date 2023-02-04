@@ -25,17 +25,12 @@ class UserDAL:
         await self.db_session.flush()
         return new_user
 
-    async def delete_user_data(self, user_id: UUID) -> Union[UUID, None]:
+    async def delete_user_data(self, user_id: UUID):
         query = (
             delete(User)
-            .where(and_(User.user_id == user_id, User.is_active == True))
-            .values(is_active=False)
-            .returning(User.user_id)
+            .where(User.user_id == user_id)
         )
-        res = await self.db_session.execute(query)
-        deleted_user_id_row = res.fetchone()
-        if deleted_user_id_row is not None:
-            return deleted_user_id_row[0]
+        await self.db_session.execute(query)
 
     async def get_user_by_id(self, user_id: UUID) -> Union[User, None]:
         query = select(User).where(User.user_id == user_id)

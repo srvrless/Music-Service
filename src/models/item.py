@@ -14,3 +14,14 @@ class Item(Base):
 
     def __repr__(self):
         return f"<Item name={self.name} price={self.price}>"
+
+
+class Article(Base):
+    __tablename__ = 'articles'
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(100), nullable=False, unique=True)
+
+
+class ArticleSchema(BaseModel):
+    id: int
+    title: str
