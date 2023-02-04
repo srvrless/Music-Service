@@ -17,9 +17,3 @@ async def create_item(item: ItemModel, db: AsyncSession = Depends(get_db)) -> Sh
     except IntegrityError as err:
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
-# @app.get('/item/{item_id}', response_model=ItemModel, status_code=status.HTTP_200_OK)
-# def get_an_item(item_id: int):
-# async with db as session:
-#     async with session.begin():
-#         item = session.query(Item).filter(Item.id == item_id).first()
-#         return item
