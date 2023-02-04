@@ -13,9 +13,12 @@ class TunedModel(BaseModel):
         """tells pydantic to convert even non dict obj to json"""
         orm_mode = True
 
-
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 class ShowLogin(TunedModel):
-    nickname: str
+    username: str
+    hashed_password: str
 
 
 class ShowSignUp(TunedModel):

@@ -1,17 +1,34 @@
+import jwt
 from typing import Union
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
-from hashing import Hasher
+
+from src.core.settings import Settings
 from src.models.user import User
 from src.modules.authentication import token_generator
 from src.schemas.authentication import LoginModel
 from src.serializer.dal_user import UserDAL
+from src.utils.hashing import Hasher
 
 users = []
 jwt_router = APIRouter(tags=['jwt'])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, Settings.authjwt_secret_key, algorithms=['HS256'])
+        user = await User.get(id=payload.get("id"))
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid nickname or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return user
 
 
 async def get_user_by_email_for_auth(email_address: str, db: AsyncSession):
@@ -76,8 +93,8 @@ async def user_login(user: LoginModel = Depends(get_current_user)):
 #             refresh_token = Authorize.create_refresh_token(subject=user.nickname)
 #             return {"access_token": access_token, "refresh_token": refresh_token}
 #         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
-#
-#
+
+
 # @jwt_router.get('/jwt_protected')
 # async def get_logged_in_user(Authorize: AuthJWT = Depends()):
 #     try:

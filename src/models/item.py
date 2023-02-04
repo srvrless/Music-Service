@@ -1,5 +1,7 @@
-from src.database.config import Base
+from pydantic import BaseModel
 from sqlalchemy import String, Boolean, Integer, Column, Text
+
+from src.database.config import Base
 
 
 class Item(Base):

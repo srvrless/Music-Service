@@ -1,15 +1,12 @@
 """File with settings and configs for the project"""
 import inspect
+from typing import Any, Callable, Dict, Optional
 
+from fastapi import FastAPI
+from fastapi.openapi.utils import get_openapi
 from fastapi.routing import APIRoute
 from fastapi_jwt_auth import AuthJWT
 from pydantic import BaseModel
-from typing import Any, Callable, Dict, Optional, List
-from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.openapi.utils import get_openapi
-
-DATABASE_URL = "postgresql+asyncpg://postgres:Daimondi12@localhost:5432/Nevless"
-TEST_DATABASE_URL = "postgresql+asyncpg://postgres:Daimondi12@localhost:5432/Nevless"
 
 
 class Settings(BaseModel):
