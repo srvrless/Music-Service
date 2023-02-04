@@ -9,11 +9,11 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.song import SongModel
-from src.schemas.song import SongCreate
-from src.schemas.song import DeleteSongResponse
 from src.database.config import get_db
-from src.modules.song import create_new_song, delete_song, get_song_by_id
+from src.modules.song import create_new_song, delete_sing, get_song_by_id
+from src.schemas.song import DeleteSongResponse
+from src.schemas.song import SongCreate
+from src.schemas.song import SongModel
 
 logger = getLogger(__name__)
 song_route = APIRouter(prefix='/song', tags=['song'])
@@ -36,7 +36,7 @@ async def create_song(body: SongCreate, db: AsyncSession = Depends(get_db),
 
 @song_route.delete("/", response_model=DeleteSongResponse)
 async def delete_song(song_id: UUID, db: AsyncSession = Depends(get_db)) -> DeleteSongResponse:
-    deleted_song_id = await delete_song(song_id, db)
+    deleted_song_id = await delete_sing(song_id, db)
     if deleted_song_id is None:
         raise HTTPException(
             status_code=404, detail=f"song with id {song_id} not found."
@@ -46,7 +46,7 @@ async def delete_song(song_id: UUID, db: AsyncSession = Depends(get_db)) -> Dele
 
 @song_route.get("/", response_model=SongModel)
 async def get_song_by_id(song_id: UUID, db: AsyncSession = Depends(get_db)) -> SongModel:
-    song = await get_song_by_id(song_id, db)
+    song = await get_song_by_id_(song_id, db)
     if song is None:
         raise HTTPException(
             status_code=404, detail=f"song with id {song_id} not found."

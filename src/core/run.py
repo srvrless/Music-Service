@@ -5,7 +5,7 @@ from fastapi.routing import APIRouter
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_jwt_auth import AuthJWT
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from settings import Settings, custom_openapi
@@ -59,10 +59,8 @@ async def update_article(id: int, article: ArticleSchema, db: AsyncSession = Dep
 
 @app.delete('/articles_delete/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_article(id: int, db: AsyncSession = Depends(get_db)):
-    delete_article = select(Article).where(Article.id == id)
-    await db.delete(delete_article)
-    await db.commit()
-    # await db.refresh(delete_article)
+    query = delete(Article).where(Article.id == id)
+    await db.execute(query)
     return {}
 
 
