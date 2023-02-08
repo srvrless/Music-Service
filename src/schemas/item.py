@@ -12,7 +12,6 @@ class TunedModel(BaseModel):
 
 
 class ItemModel(BaseModel):
-    id: Optional[int]
     name: str
     description: str
     price: int

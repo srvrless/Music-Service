@@ -51,8 +51,8 @@ class UserDAL:
         if update_user_id_row is not None:
             return update_user_id_row[0]
 
-    async def get_user_by_email(self, email_address: str) -> Union[User, None]:
-        query = select(User).where(User.email_address == email_address)
+    async def get_user_by_email(self, nickname: str) -> Union[User, None]:
+        query = select(User).where(User.nickname == nickname)
         res = await self.db_session.execute(query)
         user_row = res.fetchone()
         if user_row is not None:

@@ -1,5 +1,12 @@
 version: "3.0"
 services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - nginx
   db:
     container_name: "database"
     image: postgres:14.1-alpine
@@ -9,11 +16,20 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Daimondi12
-      - POSTGRES_DB=Flask_app
+      - POSTGRES_DB=Nevles
     ports:
       - "5432:5432"
     networks:
       - custom
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
 networks:
   custom:
     driver: bridge
+

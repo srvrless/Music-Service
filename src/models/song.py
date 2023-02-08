@@ -1,6 +1,7 @@
 import uuid
 
 from sqlalchemy import Column, String, Boolean, Integer, ForeignKey, Text
+from sqlalchemy.orm import relationship
 from sqlalchemy_utils.types import ChoiceType
 from sqlalchemy.dialects.postgresql import UUID
 from src.database.config import Base

@@ -1,7 +1,8 @@
 from typing import Union
 from uuid import UUID
+
+from sqlalchemy import and_, select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import and_, select, update, delete
 
 from src.models.song import Song
 
@@ -40,7 +41,7 @@ class SongDAL:
     async def delete_song(self, song_id: UUID) -> Union[UUID, None]:
         query = (
             delete(Song)
-            .where(and_(Song.song_id == song_id, Song.is_liked == False))
+            .where(Song.song_id == song_id)
             .returning(Song.song_id)
         )
         res = await self.db_session.execute(query)

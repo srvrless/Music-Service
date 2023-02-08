@@ -17,11 +17,9 @@ async def create_new_song(body: SongCreate, db) -> SongModel:
                 verified=body.verified
             )
             return SongModel(
-                song_id=song.song_id,
                 name=song.name,
+                creator=body.creator,
                 song_file=song.song_file,
-                song_status=song.song_status,
-                verified=body.verified
             )
 
 
@@ -35,7 +33,7 @@ async def delete_sing(song_id, db) -> Union[UUID, None]:
             return deleted_song_id
 
 
-async def get_song_by_id(song_id, db) -> Union[SongModel, None]:
+async def get_song_by_id_(song_id, db) -> Union[SongModel, None]:
     async with db as session:
         async with session.begin():
             song_dal = SongDAL(session)
@@ -44,8 +42,7 @@ async def get_song_by_id(song_id, db) -> Union[SongModel, None]:
             )
             if song is not None:
                 return SongModel(
-                    song_id=song.song_id,
                     name=song.name,
+                    creator=song.creator,
                     song_file=song.song_file,
-                    song_status=song.song_status,
                 )

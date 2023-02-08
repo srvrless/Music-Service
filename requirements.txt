@@ -1,8 +1,9 @@
 absl-py==1.2.0
 aiofiles==22.1.0
-aiogram==2.22.2
+aiogram==2.23.1
 aiohttp==3.8.3
 aiosignal==1.2.0
+aiosqlite==0.17.0
 alembic==1.9.2
 altgraph==0.17.2
 anyio==3.6.1
@@ -16,6 +17,7 @@ atlastk==0.13.2
 atomicwrites==1.4.0
 attrs==21.4.0
 Babel==2.9.1
+bcrypt==4.0.1
 beautifulsoup4==4.11.1
 branca==0.5.0
 cachetools==5.2.0
@@ -63,7 +65,9 @@ frozenlist==1.3.0
 future==0.18.2
 gast==0.4.0
 gdown==4.5.1
+geographiclib==1.52
 geojson==2.5.0
+geopy==2.2.0
 gino==1.0.1
 gmpy2==2.1.2
 google-auth==2.9.1
@@ -78,6 +82,7 @@ h11==0.12.0
 h2==4.1.0
 h5py==3.7.0
 halo==0.0.31
+hasher==2.0.1
 hpack==4.0.0
 httpcore==0.15.0
 httpx==0.23.3
@@ -89,11 +94,14 @@ imageio==2.19.3
 iniconfig==1.1.1
 itsdangerous==2.1.2
 Jinja2==3.1.2
+jose==1.0.0
 keras==2.9.0
 Keras-Preprocessing==1.1.2
 libclang==14.0.6
 log-symbols==0.0.14
 lxml==4.9.1
+machine2human==0.0.4
+magic-filter==1.0.9
 Mako==1.2.3
 Markdown==3.4.1
 Markups==3.1.3
@@ -168,7 +176,7 @@ six==1.16.0
 sniffio==1.2.0
 soupsieve==2.3.2.post1
 spinners==0.0.24
-SQLAlchemy==1.4.46
+SQLAlchemy==1.4.44
 SQLAlchemy-Utils==0.39.0
 sqlparse==0.4.2
 starlette==0.22.0
