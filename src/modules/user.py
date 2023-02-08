@@ -17,7 +17,7 @@ from src.utils.hashing import Hasher
 
 logger = getLogger(__name__)
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 
 async def create_new_user(user: SignUpModel, db) -> ShowSignUp:
@@ -75,18 +75,18 @@ async def delete_user(user_id, db) -> Union[UUID, None]:
             return deleted_user_id
 
 
-async def get_user_by_email_for_auth(email_address: str, db: AsyncSession):
+async def get_user_by_email_for_auth(nickname: str, db: AsyncSession):
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
             return await user_dal.get_user_by_email(
-                email_address=email_address,
+                nickname=nickname,
             )
 
 
-async def authenticate_user(email_address: str, password: str, db: AsyncSession
+async def authenticate_user(nickname: str, password: str, db: AsyncSession
                             ) -> Union[User, None]:
-    user = await get_user_by_email_for_auth(email_address=email_address, db=db)
+    user = await get_user_by_email_for_auth(nickname=nickname, db=db)
     if user is None:
         return
     if not Hasher.verify_password(password, user.hashed_password):
@@ -103,12 +103,12 @@ async def get_current_user_from_token(token: str = Depends(oauth2_scheme), db: A
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
-        email_address: str = payload.get("sub")
-        if email_address is None:
+        nickname: str = payload.get("sub")
+        if nickname is None:
             raise credentials_exception
     except Exception:
         raise credentials_exception
-    user = await get_user_by_email_for_auth(email_address=email_address, db=db)
+    user = await get_user_by_email_for_auth(nickname=nickname, db=db)
     if user is None:
         raise credentials_exception
     return user

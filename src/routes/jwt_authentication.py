@@ -1,20 +1,20 @@
-import jwt
 from typing import Union
 
+import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.settings import Settings
 from src.models.user import User
 from src.modules.authentication import token_generator
+from src.modules.user import oauth2_scheme
 from src.schemas.authentication import LoginModel
 from src.serializer.dal_user import UserDAL
 from src.utils.hashing import Hasher
 
 users = []
 jwt_router = APIRouter(tags=['jwt'])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -31,17 +31,17 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return user
 
 
-async def get_user_by_email_for_auth(email_address: str, db: AsyncSession):
+async def get_user_by_email_for_auth(nickname: str, db: AsyncSession):
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
-            return await user_dal.get_user_by_email(email_address=email_address)
+            return await user_dal.get_user_by_email(nickname=nickname)
 
 
 async def authenticate_user(
-        email_address: str, password: str, db: AsyncSession
+        nickname: str, password: str, db: AsyncSession
 ) -> Union[User, None]:
-    user = await get_user_by_email_for_auth(email_address=email_address, db=db)
+    user = await get_user_by_email_for_auth(nickname=nickname, db=db)
     if user is None:
         return
     if Hasher.verify_password(password, user.hashed_password):
@@ -59,13 +59,13 @@ async def user_login(user: LoginModel = Depends(get_current_user)):
     return {"status": "ok",
             "data":
                 {
-                    "username": user.nickname,
+                    "nickname": user.nickname,
                     "password": user.password
 
                 }
             }
-
-# @jwt_router.get('/jwt_fresh_url')
+#
+# @jwt_routerr.get('/jwt_fresh_url')
 # async def get_user(Authorize: AuthJWT = Depends()):
 #     try:
 #         Authorize.fresh_jwt_required()

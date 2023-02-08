@@ -10,18 +10,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.database.config import get_db
 from src.models.user import User
 from src.modules.user import create_new_user, update_user, get_user_by_id, get_current_user_from_token, \
-    authenticate_user, delete_user
+    authenticate_user, delete_user, oauth2_scheme
 from src.schemas.authentication import ShowSignUp, DeleteUserResponse, SignUpModel, UpdatedUserResponse, \
     UpdateUserRequest, Token
 from src.utils.jwt_token import create_access_token
 
 logger = getLogger(__name__)
 
-user_route = APIRouter(tags=['user'])
+user_router = APIRouter(tags=['user'])
 
 
-@user_route.post("/login", response_model=Token)
-async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+@user_router.post("/login", response_model=Token)
+async def jwt_login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     user = await authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(
@@ -36,7 +36,7 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Async
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@user_route.post("/", response_model=ShowSignUp)
+@user_router.post("/", response_model=ShowSignUp)
 async def create_user(body: SignUpModel, db: AsyncSession = Depends(get_db)) -> ShowSignUp:
     try:
         return await create_new_user(body, db)
@@ -45,7 +45,7 @@ async def create_user(body: SignUpModel, db: AsyncSession = Depends(get_db)) -> 
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
 
 
-@user_route.delete("/", response_model=DeleteUserResponse)
+@user_router.delete("/", response_model=DeleteUserResponse)
 async def delete_user_page(
         user_id: UUID, db: AsyncSession = Depends(get_db)
 ) -> DeleteUserResponse:
@@ -57,7 +57,7 @@ async def delete_user_page(
     return DeleteUserResponse(deleted_user_id=deleted_user_id)
 
 
-@user_route.get("/", response_model=ShowSignUp)
+@user_router.get("/", response_model=ShowSignUp)
 async def get_user(user_id: UUID, db: AsyncSession = Depends(get_db)) -> ShowSignUp:
     user = await get_user_by_id(user_id, db)
     if user is None:
@@ -67,7 +67,7 @@ async def get_user(user_id: UUID, db: AsyncSession = Depends(get_db)) -> ShowSig
     return user
 
 
-@user_route.patch("/", response_model=UpdatedUserResponse)
+@user_router.patch("/", response_model=UpdatedUserResponse)
 async def update_user_by_id(user_id: UUID, body: UpdateUserRequest, db: AsyncSession = Depends(get_db)
                             ) -> UpdatedUserResponse:
     updated_user_params = body.dict(exclude_none=True)
@@ -90,12 +90,12 @@ async def update_user_by_id(user_id: UUID, body: UpdateUserRequest, db: AsyncSes
     return UpdatedUserResponse(updated_user_id=updated_user_id)
 
 
-@user_route.get("/jwt_auth")
+@user_router.get("/jwt_auth")
 async def sample_endpoint_under_jwt(
         current_user: User = Depends(get_current_user_from_token),
 ):
     return {"Success": True, "current_user": current_user}
 
-# @user_route.post('/update_profile_image', response_model=create_upload_file)
+# @user_router.post('/update_profile_image', response_model=create_upload_file)
 # async def update_photo():
 #     pass

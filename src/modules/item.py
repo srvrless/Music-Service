@@ -23,7 +23,6 @@ async def get_all_items(item: ItemModel, db) -> ShowItem:
             # db_item = session.select(Item).where(Item.name == item.name).first()
 
             return ShowItem(
-                id=item.id,
                 name=item.name,
                 description=item.description,
                 price=item.price,

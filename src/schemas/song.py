@@ -11,12 +11,9 @@ class TunedModel(BaseModel):
 
 
 class SongModel(TunedModel):
-    song_id: uuid.UUID
     name: str
     creator: str
     song_file: str
-    song_status: Optional[str] = 'NOT_LIKED'
-    verified: Optional[bool]
 
 
 class SongCreate(BaseModel):
@@ -25,6 +22,7 @@ class SongCreate(BaseModel):
     song_file: str
     song_status: Optional[str] = 'NOT_LIKED'
     verified: Optional[bool]
+
 
 class DeleteSongResponse(BaseModel):
     deleted_song_id: uuid.UUID
