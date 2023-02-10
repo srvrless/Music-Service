@@ -11,18 +11,15 @@ class SongDAL:
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
-    async def create_song(self, name: str, creator: str, song_file: str, song_status: str, verified: bool) -> Song:
-        new_song = Song(
+    async def like_song(self, name: str, creator: str, song_status: str) -> Song:
+        like_song = Song(
             name=name,
             creator=creator,
-            song_file=song_file,
             song_status=song_status,
-            verified=verified
-
         )
-        self.db_session.add(new_song)
-        await self.db_session.flush()
-        return new_song
+        self.db_session.execute(like_song)
+        await self.db_session.fethone()
+        return like_song
 
     async def get_song_by_name(self, song_id: UUID) -> Union[Song, None]:
         query = select(Song)

@@ -1,8 +1,13 @@
 import uuid
 
-from sqlalchemy import Column, String, Boolean, Integer, ForeignKey, Text
+from sqlalchemy import Column, String, Boolean
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+
 from src.database.config import Base
+from src.models.playlist import PlayList
+
+PlayList = PlayList()
 
 
 class User(Base):
@@ -14,6 +19,7 @@ class User(Base):
     is_active = Column(Boolean(), default=True)
     is_subscriber = Column(Boolean(), default=False)
     hashed_password = Column(String, nullable=False)
+    playlist = relationship('PlayList', backref='users')
 
     def __repr__(self):
         return f'<User {self.nickname}'

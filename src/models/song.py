@@ -1,10 +1,15 @@
 import uuid
 
-from sqlalchemy import Column, String, Boolean, Integer, ForeignKey, Text
+from sqlalchemy import Column, String, Boolean
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils.types import ChoiceType
-from sqlalchemy.dialects.postgresql import UUID
+
 from src.database.config import Base
+from src.models.playlist import PlayList
+
+PlayList = PlayList()
+
 
 class Song(Base):
     SONG_STATUS = (
@@ -22,4 +27,5 @@ class Song(Base):
     song_status = Column(ChoiceType(choices=SONG_STATUS), default="NOT_LIKED")
     verified = Column(Boolean, unique=False, default=False)
     # is_liked = Column(Boolean(), default=False)
-    # playlist = relationship('PlayList', back_populates='songs')
+    playlist = relationship('PlayList', backref='songs')
+    # liked_songs = relationship('liked_songs', backref='songs')

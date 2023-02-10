@@ -1,11 +1,8 @@
-import re
 import uuid
 from typing import Optional
 
 from fastapi import HTTPException
 from pydantic import BaseModel, constr, EmailStr, validator
-
-LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
 
 class TunedModel(BaseModel):
@@ -39,7 +36,7 @@ class SignUpModel(BaseModel):
 
     @validator("nickname")
     def validate_nickname(cls, value):
-        if not LETTER_MATCH_PATTERN.match(value):
+        if not value.isalnum():
             raise HTTPException(
                 status_code=422, detail="nickname should contains only letters"
             )
