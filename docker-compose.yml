@@ -4,9 +4,6 @@ services:
     build: .
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-      - nginx
   db:
     container_name: "database"
     image: postgres:14.1-alpine

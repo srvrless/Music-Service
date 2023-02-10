@@ -1,21 +1,19 @@
 from datetime import timedelta
-from logging import getLogger
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
+from loguru import logger
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.config import get_db
 from src.models.user import User
 from src.modules.user import create_new_user, update_user, get_user_by_id, get_current_user_from_token, \
-    authenticate_user, delete_user, oauth2_scheme
+    authenticate_user, delete_user
 from src.schemas.authentication import ShowSignUp, DeleteUserResponse, SignUpModel, UpdatedUserResponse, \
     UpdateUserRequest, Token
 from src.utils.jwt_token import create_access_token
-
-logger = getLogger(__name__)
 
 user_router = APIRouter(tags=['user'])
 
@@ -39,7 +37,9 @@ async def jwt_login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncS
 @user_router.post("/", response_model=ShowSignUp)
 async def create_user(body: SignUpModel, db: AsyncSession = Depends(get_db)) -> ShowSignUp:
     try:
+        logger.info("creating user")
         return await create_new_user(body, db)
+
     except IntegrityError as err:
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")

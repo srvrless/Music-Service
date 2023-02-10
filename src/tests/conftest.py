@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from starlette.testclient import TestClient
 
 from src.core import settings
-from src.core.run import app
+from src.core.app import app
 from src.database.config import get_db
 
 CLEAN_TABLES = [

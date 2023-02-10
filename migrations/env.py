@@ -7,8 +7,6 @@ from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-
-
 config = context.config
 
 # Interpret the config file for Python logging.
@@ -16,15 +14,14 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-
 from src.models.song import Song
 from src.models.user import User
-from src.database.config import Base
-target_metadata = Base.metadata
-# target_metadata = None
+from src.models.playlist import PlayList
+from src.models.item import Item
 
+from src.database.config import Base
+
+target_metadata = Base.metadata
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

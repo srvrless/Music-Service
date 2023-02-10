@@ -1,17 +1,32 @@
 """File with settings and configs for the project"""
-import inspect
-from typing import Any, Callable, Dict, Optional
 
-from fastapi import FastAPI
-from fastapi.openapi.utils import get_openapi
-from fastapi.routing import APIRoute
-from fastapi_jwt_auth import AuthJWT
+import os
+
 from pydantic import BaseModel
 
 
 class Settings(BaseModel):
     authjwt_secret_key: str = 'a8906ba1367b4fe455c9804207d4268cef42b1c9026ff8c6805802bc009036ea'
 
+
+BASEDIR = os.getcwd()
+LOGDIR = "logs"
+LOGFILE = "moviestar.log"
+BIND = "0.0.0.0"
+
+#
+# if len(sys.argv) < 2:
+#     print("no env provided from Pipfile")
+#     sys.exit(1)
+#
+# dotenv_path = join(dirname(__file__), f".env.{sys.argv[1]}")
+# load_dotenv(dotenv_path)
+#
+# PORT = os.environ.get("PORT")
+# WORKERS = os.environ.get("WORKERS")
+# RELOAD = os.environ.get("RELOAD")
+ORIGINS = "*"
+# NB_ENV = os.environ.get("NB_ENV")
 
 # def custom_openapi(  # noqa: C901, WPS210, WPS231
 #         app: FastAPI,
