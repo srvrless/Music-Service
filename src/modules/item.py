@@ -1,8 +1,7 @@
 from fastapi import HTTPException
 
-from src.models.item import Item
 from src.schemas.item import ItemModel, ShowItem
-from src.serializer.dal_item import ItemDal
+from src.layouts.dal_item import ItemDal
 
 
 async def get_all_items(item: ItemModel, db) -> ShowItem:

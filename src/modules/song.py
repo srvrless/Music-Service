@@ -2,7 +2,7 @@ from typing import Union
 from uuid import UUID
 from src.schemas.song import SongModel
 from src.schemas.song import SongCreate
-from src.serializer.dal_song import SongDAL
+from src.layouts.dal_song import SongDAL
 
 
 async def create_new_song(body: SongCreate, db) -> SongModel:
