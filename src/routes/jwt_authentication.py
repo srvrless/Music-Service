@@ -10,7 +10,7 @@
 # from src.modules.authentication import token_generator
 # from src.modules.user import oauth2_scheme
 # from src.schemas.authentication import LoginModel
-# from src.serializer.dal_user import UserDAL
+# from src.layouts.dal_user import UserDAL
 # from src.utils.hashing import Hasher
 #
 # users = []

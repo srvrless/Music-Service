@@ -12,7 +12,7 @@ from src.database.config import get_db
 from src.models.user import User
 from src.schemas.authentication import ShowSignUp
 from src.schemas.authentication import SignUpModel
-from src.serializer.dal_user import UserDAL
+from src.layouts.dal_user import UserDAL
 from src.utils.hashing import Hasher
 
 logger = getLogger(__name__)

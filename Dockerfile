@@ -1,10 +1,10 @@
-FROM python:3.10-slim
+FROM python:3.10-alpine
 
-WORKDIR /usr/src/application
+WORKDIR /usr/src/api
 
 COPY requirements.txt ./
 
-RUN pip install -r requirements.txt
+RUN  pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
