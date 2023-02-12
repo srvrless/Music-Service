@@ -10,7 +10,7 @@ from src import settings
 Base = declarative_base()
 
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    settings.DB_PATH,
     future=True,
     echo=True,
     execution_options={"isolation_level": "AUTOCOMMIT"},

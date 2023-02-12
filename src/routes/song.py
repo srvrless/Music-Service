@@ -21,11 +21,6 @@ song_router = APIRouter(prefix='/song', tags=['song'])
 
 @song_router.post("/", response_model=SongModel)
 async def create_song(body: SongCreate, db: AsyncSession = Depends(get_db)) -> SongModel:
-    # try:
-    #     Authorize.jwt_required()
-    #
-    # except Exception as e:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Token")
     try:
         return await create_new_song(body, db)
     except IntegrityError as err:
@@ -51,5 +46,11 @@ async def get_song_by_id(song_id: UUID, db: AsyncSession = Depends(get_db)) -> S
             status_code=404, detail=f"song with id {song_id} not found."
         )
     return song
-
-
+@song_router.post('/add_to_playlist',response_model=SongModel)
+async def add_song_to_playlist(song_id: UUID, db: AsyncSession = Depends(get_db)) -> SongModel:
+    tiktok = await nev3r(song_id, db)
+    if tiktok is None:
+        raise HTTPException(
+            status_code=404, detail=f"song with id {song_id} not found."
+        )
+    return tiktok

@@ -23,8 +23,8 @@ BIND = "0.0.0.0"
 # load_dotenv(dotenv_path)
 #
 # PORT = os.environ.get("PORT")
-# WORKERS = os.environ.get("WORKERS")
-# RELOAD = os.environ.get("RELOAD")
+WORKERS = os.environ.get("WORKERS")
+RELOAD = os.environ.get("RELOAD")
 ORIGINS = "*"
 # NB_ENV = os.environ.get("NB_ENV")
 

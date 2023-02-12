@@ -28,4 +28,4 @@ class Song(Base):
     verified = Column(Boolean, unique=False, default=False)
     # is_liked = Column(Boolean(), default=False)
     playlist = relationship('PlayList', backref='songs')
-    # liked_songs = relationship('liked_songs', backref='songs')
+    liked_songs = relationship('liked_songs', backref='songs')
