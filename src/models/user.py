@@ -11,7 +11,7 @@ PlayList = PlayList()
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
     __table_args__ = {'extend_existing': True}
     user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nickname = Column(String, nullable=False, unique=True)

@@ -5,7 +5,7 @@ from src.database.config import Base
 
 
 class Item(Base):
-    __tablename__ = 'items'
+    __tablename__ = 'item'
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False, unique=True)
     description = Column(Text)
@@ -17,7 +17,7 @@ class Item(Base):
 
 
 class Article(Base):
-    __tablename__ = 'articles'
+    __tablename__ = 'article'
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(100), nullable=False, unique=True)
 

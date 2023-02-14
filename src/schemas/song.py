@@ -10,14 +10,16 @@ class TunedModel(BaseModel):
         orm_mode = True
 
 
-class SongModel(TunedModel):
-    name: str
+class ShowSong(TunedModel):
+    title: str
     creator: str
     song_file: str
+    date_added: str
+    duration: int
 
 
 class SongCreate(BaseModel):
-    name: str
+    title: str
     creator: str
     song_file: str
     song_status: Optional[str] = 'NOT_LIKED'
@@ -33,5 +35,5 @@ class UpdatedSongResponse(BaseModel):
 
 
 class UpdateSongRequest(BaseModel):
-    name: Optional[constr(min_length=1)]
+    title: Optional[constr(min_length=1)]
     creator: Optional[constr(min_length=1)]
