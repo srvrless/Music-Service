@@ -13,14 +13,14 @@ from src.modules.song import create_new_song, delete_sing, get_song_by_id_
 from src.modules.user import oauth2_scheme
 from src.schemas.song import DeleteSongResponse
 from src.schemas.song import SongCreate
-from src.schemas.song import SongModel
+from src.schemas.song import ShowSong
 
 logger = getLogger(__name__)
 song_router = APIRouter(prefix='/song', tags=['song'])
 
 
-@song_router.post("/", response_model=SongModel)
-async def create_song(body: SongCreate, db: AsyncSession = Depends(get_db)) -> SongModel:
+@song_router.post("/", response_model=ShowSong)
+async def create_song(body: SongCreate, db: AsyncSession = Depends(get_db)) -> ShowSong:
     try:
         return await create_new_song(body, db)
     except IntegrityError as err:
@@ -38,16 +38,16 @@ async def delete_song(song_id: UUID, db: AsyncSession = Depends(get_db)) -> Dele
     return DeleteSongResponse(deleted_song_id=deleted_song_id)
 
 
-@song_router.get("/", response_model=SongModel)
-async def get_song_by_id(song_id: UUID, db: AsyncSession = Depends(get_db)) -> SongModel:
+@song_router.get("/", response_model=ShowSong)
+async def get_song_by_id(song_id: UUID, db: AsyncSession = Depends(get_db)) -> ShowSong:
     song = await get_song_by_id_(song_id, db)
     if song is None:
         raise HTTPException(
             status_code=404, detail=f"song with id {song_id} not found."
         )
     return song
-@song_router.post('/add_to_playlist',response_model=SongModel)
-async def add_song_to_playlist(song_id: UUID, db: AsyncSession = Depends(get_db)) -> SongModel:
+@song_router.post('/add_to_playlist',response_model=ShowSong)
+async def add_song_to_playlist(song_id: UUID, db: AsyncSession = Depends(get_db)) -> ShowSong:
     tiktok = await nev3r(song_id, db)
     if tiktok is None:
         raise HTTPException(
