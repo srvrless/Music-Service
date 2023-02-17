@@ -5,9 +5,10 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from src.database.config import Base
-from src.models.playlist import PlayList
+from src.models.liked_songs import LikedSong
 
-PlayList = PlayList()
+# PlayList = PlayList()
+LikedSong = LikedSong()
 
 
 class User(Base):
@@ -19,7 +20,8 @@ class User(Base):
     is_active = Column(Boolean(), default=True)
     is_subscriber = Column(Boolean(), default=False)
     hashed_password = Column(String, nullable=False)
-    playlist = relationship('PlayList', backref='users')
+    # playlist = relationship('PlayList', backref='user')
+    liked = relationship('LikedSong', backref='user')
 
     def __repr__(self):
         return f'<User {self.nickname}'

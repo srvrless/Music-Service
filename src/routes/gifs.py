@@ -6,15 +6,18 @@ from fastapi.responses import HTMLResponse
 
 from src.modules.gif import create_upload_file
 from src.modules.user import oauth2_scheme
+from celery import Celery
 
+celery = Celery('tasks', broker='redis://localhost:6379')
 logger = getLogger(__name__)
 gif_router = APIRouter(prefix='/gif', tags=['gif'])
 
 
-@gif_router.get("/get")
-async def get_gif(token: str = Depends(oauth2_scheme)):
+# @gif_router.get("/get")
+@celery.task
+def get_gif(token: str = Depends(oauth2_scheme)):
     out = []
-    for filename in os.listdir("static/gif"):
+    for filename in os.listdir("web/static/gif"):
         out.append({
             "name": filename.split(".")[0],
             "path": "/static/gif/" + filename

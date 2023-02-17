@@ -29,6 +29,7 @@ from PIL import Image
 # import secrets
 # from PIL import Image
 
+
 async def create_upload_file(file):
     FILEPATH = "src/code/static/images"
     filename = file.filename

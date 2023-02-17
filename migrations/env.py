@@ -16,8 +16,9 @@ if config.config_file_name is not None:
 
 from src.models.song import Song
 from src.models.user import User
-from src.models.playlist import PlayList
+# from src.models.playlist import PlayList
 from src.models.item import Item
+from src.models.liked_songs import LikedSong
 
 from src.database.config import Base
 
