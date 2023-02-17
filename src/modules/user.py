@@ -38,8 +38,7 @@ async def create_new_user(user: SignUpModel, db) -> ShowSignUp:
 
 
 async def update_user(
-        updated_user_params: dict, user_id: UUID, db
-) -> Union[UUID, None]:
+        updated_user_params: dict, user_id: UUID, db) -> Union[UUID, None]:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)

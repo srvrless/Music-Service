@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.core.app import app
 from src.core.settings import ORIGINS
 
-origins = ["http://localhost:8000"]
+origins = ["http://localhost:8000",]
 for o in ORIGINS.split(","):
     origins.append(o)
 

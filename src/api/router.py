@@ -1,22 +1,53 @@
-from fastapi import APIRouter, BackgroundTasks, Depends
-
-
-from .tasks import send_email_report_dashboard
-from ..modules.user import get_current_user_from_token
+import stripe as stripe
+from fastapi import APIRouter, BackgroundTasks
+from fastapi_cache.decorator import cache
+from loguru import logger
+from src.layouts.dal_user import UserDAL
+from ..routes.gifs import get_gif
 
 router = APIRouter(prefix="/report")
+stripe.api_key = "STRIPE_KEY"
 
 
 @router.get("/dashboard")
-def get_dashboard_report(background_tasks: BackgroundTasks, user=Depends(get_current_user_from_token)):
+def get_dashboard_report(background_tasks: BackgroundTasks):
     # 1400 ms - Клиент ждет
-    send_email_report_dashboard(user.username)
+    get_gif()
     # 500 ms - Задача выполняется на фоне FastAPI в event loop'е или в другом треде
-    background_tasks.add_task(send_email_report_dashboard, user.username)
+    background_tasks.add_task(get_gif)
     # 600 ms - Задача выполняется воркером Celery в отдельном процессе
-    send_email_report_dashboard.delay(user.username)
+    get_gif.delay()
     return {
         "status": 200,
         "data": "Письмо отправлено",
         "details": None
     }
+
+
+# data
+stars = {
+    "Bruce Willis": {"movies": ["Die Hard", "Blind Date"]},
+    "Arnold Shwarzenegger": {"movies": ["Terminator", "Conan", "Commando"]},
+    "Sylvester Stallone": {"movies": ["Rambo", "Cobra", "Over the Top"]},
+}
+
+
+@router.get("/fetch")
+@cache(expire=3)
+async def fetch():
+    """returns 80s movie stars"""
+    logger.info("fetching movie stars to front end (Vue)")
+    return stars
+
+
+async def payment():
+    pass
+
+
+# def premium_subscription(background_tasks: BackgroundTasks):
+#     payment_subscription()
+#     background_tasks.add_task(payment_subscription)
+#     payment_subscription.delay()
+#     if payment_subscription == True:
+#         return UserDAL.set_premium_status(user_id=)
+#
