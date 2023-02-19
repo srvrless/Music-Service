@@ -59,3 +59,7 @@ class UpdatedUserResponse(BaseModel):
 class UpdateUserRequest(BaseModel):
     nickname: Optional[constr(min_length=1)]
     email_address: Optional[EmailStr]
+
+
+class UpdatePremiumStatus(BaseModel):
+    is_subscriber: Optional[bool]

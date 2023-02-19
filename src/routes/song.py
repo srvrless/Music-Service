@@ -5,6 +5,7 @@ from uuid import UUID
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from loguru import logger
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,7 +16,6 @@ from src.schemas.song import DeleteSongResponse
 from src.schemas.song import SongCreate
 from src.schemas.song import ShowSong
 
-logger = getLogger(__name__)
 song_router = APIRouter(prefix='/song', tags=['song'])
 
 
@@ -48,7 +48,7 @@ async def get_song_by_id(song_id: UUID, db: AsyncSession = Depends(get_db)) -> S
     return song
 @song_router.post('/add_to_playlist',response_model=ShowSong)
 async def add_song_to_playlist(song_id: UUID, db: AsyncSession = Depends(get_db)) -> ShowSong:
-    tiktok = await nev3r(song_id, db)
+    tiktok = await never(song_id, db)
     if tiktok is None:
         raise HTTPException(
             status_code=404, detail=f"song with id {song_id} not found."

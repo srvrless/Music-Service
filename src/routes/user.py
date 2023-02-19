@@ -12,8 +12,8 @@ from src.models.user import User
 from src.modules.subscription import subscription_user
 from src.modules.user import create_new_user, update_user, get_user_by_id, get_current_user_from_token, \
     authenticate_user, delete_user
-from src.schemas.authentication import ShowSignUp, DeleteUserResponse, SignUpModel, UpdatedUserResponse, \
-    UpdateUserRequest, Token
+from src.schemas.user import ShowSignUp, DeleteUserResponse, SignUpModel, UpdatedUserResponse, \
+    UpdateUserRequest, Token, UpdatePremiumStatus
 from src.utils.jwt_token import create_access_token
 
 user_router = APIRouter(tags=['user'])
@@ -110,7 +110,7 @@ async def premium_subscriber(user_id: UUID, db: AsyncSession = Depends(get_db)):
     except IntegrityError as err:
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
-    return UpdatedUserResponse(updated_user_id=updated_user_id)
+    return UpdatePremiumStatus(is_subscriber=updated_user_id)
 
     # return {"Success": True, "current_user": db.user_id}
 
