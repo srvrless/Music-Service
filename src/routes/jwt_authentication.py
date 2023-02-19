@@ -9,7 +9,7 @@ from src.core.settings import Settings
 from src.models.user import User
 from src.modules.authentication import token_generator
 from src.modules.user import oauth2_scheme
-from src.schemas.authentication import LoginModel
+from src.schemas.user import LoginModel
 from src.layouts.dal_user import UserDAL
 from src.utils.hashing import Hasher
 

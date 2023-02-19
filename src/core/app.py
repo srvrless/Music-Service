@@ -10,6 +10,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from src.api.router import router
 from src.routes.gifs import gif_router
 from src.routes.item import item_router
+from src.routes.payment import payment_router
 from src.routes.song import song_router
 from src.routes.user import user_router
 
@@ -46,3 +47,4 @@ app.include_router(user_router)
 app.include_router(item_router)
 app.include_router(main_router)
 app.include_router(song_router)
+app.include_router(payment_router)

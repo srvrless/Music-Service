@@ -10,8 +10,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src import settings
 from src.database.config import get_db
 from src.models.user import User
-from src.schemas.authentication import ShowSignUp
-from src.schemas.authentication import SignUpModel
+from src.schemas.user import ShowSignUp
+from src.schemas.user import SignUpModel
 from src.layouts.dal_user import UserDAL
 from src.utils.hashing import Hasher
 
@@ -48,7 +48,7 @@ async def update_user(
             return updated_user_id
 
 
-async def get_user_by_id(user_id, db) -> Union[ShowSignUp, None]:
+async def get_user_by_id(user_id: UUID, db) -> Union[ShowSignUp, None]:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
