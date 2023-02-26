@@ -57,16 +57,3 @@ class UserDAL:
         user_row = res.fetchone()
         if user_row is not None:
             return user_row[0]
-
-    async def set_premium_status(self, user_id: UUID) -> Union[UUID, None]:
-        query = (
-            update(User)
-            .where(and_(User.user_id == user_id, User.is_active == True))
-            .values(is_subscriber=True)
-            .returning(User.is_subscriber)
-        )
-
-        result = await self.db_session.execute(query)
-        update_user_id_row = result.fetchone()
-        if update_user_id_row is not None:
-            return update_user_id_row[0]

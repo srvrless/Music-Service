@@ -6,9 +6,11 @@ from sqlalchemy.orm import relationship
 
 from src.database.config import Base
 from src.models.liked_songs import LikedSong
+from src.models.playlist import Subscription
 
 # PlayList = PlayList()
 LikedSong = LikedSong()
+Subscription = Subscription()
 
 
 class User(Base):
@@ -18,9 +20,11 @@ class User(Base):
     nickname = Column(String, nullable=False, unique=True)
     email_address = Column(String, nullable=False, unique=True)
     is_active = Column(Boolean(), default=True)
-    is_subscriber = Column(Boolean(), default=False)
+
     hashed_password = Column(String, nullable=False)
     # playlist = relationship('PlayList', backref='user')
+
+    user = relationship('Subscription', backref='user')
     liked = relationship('LikedSong', backref='user')
 
     def __repr__(self):

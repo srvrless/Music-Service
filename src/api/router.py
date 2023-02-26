@@ -3,7 +3,7 @@ from fastapi import APIRouter, BackgroundTasks
 from fastapi_cache.decorator import cache
 from loguru import logger
 from src.layouts.dal_user import UserDAL
-from ..routes.gifs import get_gif
+from ..routes.images import get_gif
 
 router = APIRouter(prefix="/report")
 stripe.api_key = "STRIPE_KEY"

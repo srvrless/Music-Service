@@ -16,6 +16,11 @@ class Token(BaseModel):
     token_type: str
 
 
+class Google_Token(BaseModel):
+    id: int
+    token: str
+
+
 class ShowLogin(TunedModel):
     username: str
     hashed_password: str
@@ -41,6 +46,10 @@ class SignUpModel(BaseModel):
                 status_code=422, detail="nickname should contains only letters"
             )
         return value
+
+
+class CreateUserModel(SignUpModel):
+    token: str
 
 
 class LoginModel(BaseModel):

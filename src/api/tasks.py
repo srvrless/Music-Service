@@ -1,7 +1,7 @@
 import smtplib
 from email.message import EmailMessage
 
-from src.routes.gifs import celery
+from src.routes.images import celery
 
 SMTP_PASSWORD = ''
 SMTP_USER = ''

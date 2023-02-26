@@ -15,7 +15,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 from src.models.song import Song
-from src.models.user import User
+from src.models.user import User, Subscription
 # from src.models.playlist import PlayList
 from src.models.item import Item
 from src.models.liked_songs import LikedSong
