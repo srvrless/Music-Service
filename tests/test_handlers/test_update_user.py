@@ -31,7 +31,7 @@ async def test_update_user(client, create_user_in_database, get_user_from_databa
 
 
 async def test_update_user_check_one_is_updated(
-    client, create_user_in_database, get_user_from_database
+        client, create_user_in_database, get_user_from_database
 ):
     user_data_1 = {
         "user_id": uuid4(),
@@ -92,49 +92,49 @@ async def test_update_user_check_one_is_updated(
     "user_data_updated, expected_status_code, expected_detail",
     [
         (
-            {},
-            422,
-            {
-                "detail": "At least one parameter for user update info should be provided"
-            },
+                {},
+                422,
+                {
+                    "detail": "At least one parameter for user update info should be provided"
+                },
         ),
         ({"nickname": "123"}, 422, {"detail": "nickname should contains only letters"}),
         (
-            {"email": ""},
-            422,
-            {
-                "detail": [
-                    {
-                        "loc": ["body", "email"],
-                        "msg": "value is not a valid email address",
-                        "type": "value_error.email",
-                    }
-                ]
-            },
+                {"email": ""},
+                422,
+                {
+                    "detail": [
+                        {
+                            "loc": ["body", "email"],
+                            "msg": "value is not a valid email address",
+                            "type": "value_error.email",
+                        }
+                    ]
+                },
         ),
         (
-            {"nickname": ""},
-            422,
-            {
-                "detail": [
-                    {
-                        "loc": ["body", "nickname"],
-                        "msg": "ensure this value has at least 1 characters",
-                        "type": "value_error.any_str.min_length",
-                        "ctx": {"limit_value": 1},
-                    }
-                ]
-            },
+                {"nickname": ""},
+                422,
+                {
+                    "detail": [
+                        {
+                            "loc": ["body", "nickname"],
+                            "msg": "ensure this value has at least 1 characters",
+                            "type": "value_error.any_str.min_length",
+                            "ctx": {"limit_value": 1},
+                        }
+                    ]
+                },
         ),
     ],
 )
 async def test_update_user_validation_error(
-    client,
-    create_user_in_database,
-    get_user_from_database,
-    user_data_updated,
-    expected_status_code,
-    expected_detail,
+        client,
+        create_user_in_database,
+        get_user_from_database,
+        user_data_updated,
+        expected_status_code,
+        expected_detail,
 ):
     user_data = {
         "user_id": uuid4(),

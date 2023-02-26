@@ -39,6 +39,17 @@ def check_if_successful_payment():
     try:
         if payment.status == 'succeeded':
             return True
+        if payment.status == "waiting_for_capture":
+            return False
     except KeyError:
         return False
     return False
+
+
+def payment_check():
+    try:
+        payment_id = token_payment
+        payment = Payment.find_one(payment_id)
+    except KeyError:
+        return {'payment not found': 404}
+    return payment

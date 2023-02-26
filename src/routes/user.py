@@ -9,11 +9,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.config import get_db
 from src.models.user import User
-from src.modules.subscription import subscription_user
 from src.modules.user import create_new_user, update_user, get_user_by_id, get_current_user_from_token, \
     authenticate_user, delete_user
 from src.schemas.user import ShowSignUp, DeleteUserResponse, SignUpModel, UpdatedUserResponse, \
-    UpdateUserRequest, Token, UpdatePremiumStatus
+    UpdateUserRequest, Token
 from src.utils.jwt_token import create_access_token
 
 user_router = APIRouter(tags=['user'])
@@ -33,6 +32,13 @@ async def jwt_login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncS
         expires_delta=access_token_expires,
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@user_router.get("/jwt_auth")
+async def sample_endpoint_under_jwt(
+        current_user: User = Depends(get_current_user_from_token),
+):
+    return {"Success": True, "current_user": current_user}
 
 
 @user_router.post("/", response_model=ShowSignUp)
@@ -89,28 +95,6 @@ async def update_user_by_id(user_id: UUID, body: UpdateUserRequest, db: AsyncSes
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
     return UpdatedUserResponse(updated_user_id=updated_user_id)
-
-
-@user_router.get("/jwt_auth")
-async def sample_endpoint_under_jwt(
-        current_user: User = Depends(get_current_user_from_token),
-):
-    return {"Success": True, "current_user": current_user}
-
-
-@user_router.patch("/set_premium_status")
-async def premium_subscriber(user_id: UUID, db: AsyncSession = Depends(get_db)):
-    user = await get_user_by_id(user_id, db)
-    if user is None:
-        raise HTTPException(
-            status_code=404, detail=f"User with id {user_id} not found."
-        )
-    try:
-        updated_user_id = await subscription_user(user_id=user_id, db=db)
-    except IntegrityError as err:
-        logger.error(err)
-        raise HTTPException(status_code=503, detail=f"Database error: {err}")
-    return UpdatePremiumStatus(is_subscriber=updated_user_id)
 
     # return {"Success": True, "current_user": db.user_id}
 
