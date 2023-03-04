@@ -5,6 +5,7 @@ from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # from src.models.playlist import PlayList
+from src.models.liked_songs import LikedSong
 from src.models.song import Song
 
 
@@ -12,13 +13,12 @@ class SongDAL:
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
-    async def create_song(self, name: str, creator: str, song_file: str, song_status: str, verified: bool) -> Song:
+    async def create_song(self, title: str, creator: str, song_file: str, img_file: str):
         new_song = Song(
-            name=name,
+            title=title,
             creator=creator,
             song_file=song_file,
-            song_status=song_status,
-            verified=verified
+            img_file=img_file
 
         )
         self.db_session.add(new_song)
@@ -50,10 +50,11 @@ class SongDAL:
         if deleted_song_id_row is not None:
             return deleted_song_id_row[0]
 
-    # async def added_song_to_playlist(self, song_id: UUID) -> Union[Song, None]:
-    #     add_song = PlayList(
-    #         song_id=song_id
-    #     )
-    #     self.db_session.add(add_song)
-    #     await self.db_session.flush()
-    #     return add_song
+    async def added_song_to_liked(self, user_id: UUID, song_id: UUID):
+        query = LikedSong(
+            user_id=user_id,
+            song_id=song_id
+        )
+        self.db_session.add(query)
+        await self.db_session.flush()
+        return query

@@ -7,6 +7,7 @@ from src.api.payment import create_payment, check_if_successful_payment, payment
 payment_router = APIRouter(tags=['payment'])
 
 
+# create payment
 @payment_router.post("/payments")
 def post_request_payment():
     try:
@@ -16,6 +17,7 @@ def post_request_payment():
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
 
 
+# check status payment
 @payment_router.get('/status_payment')
 def status_payment():
     try:
@@ -28,6 +30,7 @@ def status_payment():
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
 
 
+# return check your subscription
 @payment_router.get('/check_payment')
 def get_order_payment():
     try:

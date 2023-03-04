@@ -1,6 +1,7 @@
 import uuid
 from typing import Optional
 
+from fastapi import UploadFile
 from pydantic import BaseModel, constr
 
 
@@ -10,21 +11,25 @@ class TunedModel(BaseModel):
         orm_mode = True
 
 
+class LikedSong(TunedModel):
+    user_id: uuid.UUID
+    song_id: uuid.UUID
+
+
+class LikedSongModel(BaseModel):
+    user_id: uuid.UUID
+    song_id: uuid.UUID
+
+
 class ShowSong(TunedModel):
     title: str
     creator: str
     song_file: str
-    date_added: str
-    duration: int
 
 
 class SongCreate(BaseModel):
     title: str
     creator: str
-    song_file: str
-    song_status: Optional[str] = 'NOT_LIKED'
-    verified: Optional[bool]
-
 
 class DeleteSongResponse(BaseModel):
     deleted_song_id: uuid.UUID

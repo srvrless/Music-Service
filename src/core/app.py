@@ -16,7 +16,6 @@ from src.routes.payment import payment_router
 from src.routes.song import song_router
 from src.routes.subscription import subscribe_router, schedule_expired_subscriptions_cleanup
 from src.routes.user import user_router
-from tests.test_del_subscription import testx_router
 
 app = FastAPI(title="Nevless")
 
@@ -24,7 +23,7 @@ app.mount("/static", StaticFiles(directory="web/static"), name="static")
 templates = Jinja2Templates(directory="web/templates")
 
 
-# Initialize redis
+# Initialize redis and create background task remove subscription
 @app.on_event("startup")
 async def startup_event(db: AsyncSession = Depends(get_db)):
     background_tasks = BackgroundTasks()
@@ -40,7 +39,12 @@ async def startup_event(db: AsyncSession = Depends(get_db)):
 
 @app.get('/home')
 async def get_article(request: Request, ):
-    return templates.TemplateResponse('base.html', {"request": request})
+    return templates.TemplateResponse('login_and_register.html', {"request": request})
+
+
+@app.get('/never')
+async def nevermore(request: Request, ):
+    return templates.TemplateResponse('music_player.html', {"request": request})
 
 
 main_router = APIRouter()
@@ -52,7 +56,6 @@ app.include_router(user_router)
 app.include_router(item_router)
 app.include_router(main_router)
 app.include_router(song_router)
-app.include_router(testx_router)
 app.include_router(google_router)
 app.include_router(payment_router)
 app.include_router(subscribe_router)

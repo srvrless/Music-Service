@@ -17,6 +17,7 @@ directory_name = "web/static/image"
 
 
 # @celery.task
+# TODO: delete after complete set/get images
 @gif_router.get("/get")
 def get_gif(token: str = Depends(oauth2_scheme)):
     out = []
@@ -28,16 +29,18 @@ def get_gif(token: str = Depends(oauth2_scheme)):
     return out[0]
 
 
+# get image on cover
 @gif_router.get("/getsss")
 def get_image():
-    images = get_image_filenames('web/static/image')
+    images = get_image_filenames(directory_name)
     random_image = random.choice(images)
     path = f"{directory_name}/{random_image}"
     return FileResponse(path)
 
 
+# set image on cover
 @gif_router.post("/createsss")
-def create_image(image: UploadFile = File(...)):
+def set_image_on_cover(image: UploadFile = File(...)):
     try:
         file_path = upload_image('web/static/image', image)
         if file_path is None:
