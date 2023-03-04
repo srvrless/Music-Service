@@ -11,14 +11,14 @@ SMTP_PORT = 465
 
 def get_email_template_dashboard(nickname: str):
     email = EmailMessage()
-    email['Subject'] = 'Натрейдил Отчет Дашборд'
+    email['Subject'] = 'your subscription will end soon'
     email['From'] = SMTP_USER
     email['To'] = SMTP_USER
 
     email.set_content(
         '<div>'
-        f'<h1 style="color: red;">Здравствуйте, {nickname}, а вот и ваш отчет. Зацените 😊</h1>'
-        '<img src="https://static.vecteezy.com/system/resources/previews/008/295/031/original/custom-relationship'
+        f'<h1 style="color: red;">Hello, {nickname}, your subscription will end soon.  it will automatically renew if there is money on your card </h1>'
+        '<img src="xxx'
         '-management-dashboard-ui-design-template-suitable-designing-application-for-android-and-ios-clean-style-app'
         '-mobile-free-vector.jpg" width="600">'
         '</div>',

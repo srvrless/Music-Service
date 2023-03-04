@@ -1,8 +1,6 @@
-import os
-from logging import getLogger
 from uuid import UUID
 
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File, Form
 from fastapi import Depends
 from fastapi import HTTPException
 from loguru import logger
@@ -10,19 +8,28 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.config import get_db
-from src.modules.song import create_new_song, delete_sing, get_song_by_id_
-from src.modules.user import oauth2_scheme
-from src.schemas.song import DeleteSongResponse
-from src.schemas.song import SongCreate
+from src.modules.image import upload_image
+from src.modules.song import create_new_song, delete_sing, get_song_by_id_, upload_song, song_insert_to_liked
+from src.schemas.song import DeleteSongResponse, LikedSong, LikedSongModel
 from src.schemas.song import ShowSong
+from src.schemas.song import SongCreate
 
 song_router = APIRouter(prefix='/song', tags=['song'])
 
+directory_name = "web/static/image"
 
-@song_router.post("/", response_model=ShowSong)
-async def create_song(body: SongCreate, db: AsyncSession = Depends(get_db)) -> ShowSong:
+
+@song_router.post("/alb", response_model=SongCreate)
+async def create_song(title: str = Form(...),
+                      creator: str = Form(...), image_file: UploadFile = File(...),
+                      sound_file: UploadFile = File(...),
+                      db: AsyncSession = Depends(get_db)):
     try:
-        return await create_new_song(body, db)
+        # if is_song(song_file.filename):
+        upload_song(directory_name, sound_file)
+        upload_image(directory_name, image_file)
+
+        return await create_new_song(title, creator, song_file=sound_file.filename, img_file=image_file.filename, db=db)
     except IntegrityError as err:
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
@@ -46,11 +53,16 @@ async def get_song_by_id(song_id: UUID, db: AsyncSession = Depends(get_db)) -> S
             status_code=404, detail=f"song with id {song_id} not found."
         )
     return song
-@song_router.post('/add_to_playlist',response_model=ShowSong)
-async def add_song_to_playlist(song_id: UUID, db: AsyncSession = Depends(get_db)) -> ShowSong:
-    tiktok = await never(song_id, db)
-    if tiktok is None:
+
+
+@song_router.post("liked_song", response_model=LikedSong)
+async def add_song_to_liked(song: LikedSongModel, db: AsyncSession = Depends(get_db)) -> ShowSong:
+    user_id = song.user_id
+    song_id = song.song_id
+    song = await song_insert_to_liked(user_id, song_id, db)
+    x = 'neverless'
+    if song is None:
         raise HTTPException(
-            status_code=404, detail=f"song with id {song_id} not found."
+            status_code=404, detail=f"song with id {x} not found."
         )
-    return tiktok
+    return song

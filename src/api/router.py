@@ -3,7 +3,7 @@ from fastapi import APIRouter, BackgroundTasks
 from fastapi_cache.decorator import cache
 from loguru import logger
 from src.layouts.dal_user import UserDAL
-from ..routes.images import get_gif
+from src.routes.images import get_gif
 
 router = APIRouter(prefix="/report")
 stripe.api_key = "STRIPE_KEY"
@@ -40,14 +40,3 @@ async def fetch():
     return stars
 
 
-async def payment():
-    pass
-
-
-# def premium_subscription(background_tasks: BackgroundTasks):
-#     payment_subscription()
-#     background_tasks.add_task(payment_subscription)
-#     payment_subscription.delay()
-#     if payment_subscription == True:
-#         return UserDAL.set_premium_status(user_id=)
-#
