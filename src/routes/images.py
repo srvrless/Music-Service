@@ -1,36 +1,18 @@
-import os
 import random
-from logging import getLogger
 
-from celery import Celery
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
+from loguru import logger
 
 from src.modules.image import upload_image, get_image_filenames
-from src.modules.user import oauth2_scheme
 
-celery = Celery('tasks', broker='redis://localhost:6379')
-logger = getLogger(__name__)
-gif_router = APIRouter(prefix='/gif', tags=['gif'])
+gif_router = APIRouter(prefix='/image', tags=['image'])
 
 directory_name = "web/static/image"
 
 
-# @celery.task
-# TODO: delete after complete set/get images
-@gif_router.get("/get")
-def get_gif(token: str = Depends(oauth2_scheme)):
-    out = []
-    for filename in os.listdir("web/static/image"):
-        out.append({
-            "name": filename.split(".")[0],
-            "path": "/static/image/" + filename
-        })
-    return out[0]
-
-
 # get image on cover
-@gif_router.get("/getsss")
+@gif_router.get("/")
 def get_image():
     images = get_image_filenames(directory_name)
     random_image = random.choice(images)
@@ -39,7 +21,7 @@ def get_image():
 
 
 # set image on cover
-@gif_router.post("/createsss")
+@gif_router.post("/")
 def set_image_on_cover(image: UploadFile = File(...)):
     try:
         file_path = upload_image('web/static/image', image)

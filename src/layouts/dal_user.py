@@ -14,16 +14,16 @@ class UserDAL:
         self.db_session = db_session
 
     async def create_user(self, nickname: str, email_address: str, hashed_password: str) -> User:
-        # user = select(User).where(User.email_address == email_address)
+        user = select(User).where(User.email_address == email_address)
         new_user = User(
             nickname=nickname,
             email_address=email_address,
             hashed_password=hashed_password
         )
-        # if not user:
-        self.db_session.add(new_user)
-        await self.db_session.flush()
-        return new_user
+        if not user:
+            self.db_session.add(new_user)
+            await self.db_session.flush()
+            return new_user
 
     async def delete_user_data(self, user_id: UUID):
         query = (

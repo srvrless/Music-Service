@@ -11,25 +11,19 @@ class TunedModel(BaseModel):
         orm_mode = True
 
 
-class LikedSong(TunedModel):
-    user_id: uuid.UUID
-    song_id: uuid.UUID
-
-
-class LikedSongModel(BaseModel):
-    user_id: uuid.UUID
-    song_id: uuid.UUID
-
-
 class ShowSong(TunedModel):
     title: str
     creator: str
     song_file: str
+    img_file: str
 
 
 class SongCreate(BaseModel):
     title: str
     creator: str
+    img_file: str
+    song_file: str
+
 
 class DeleteSongResponse(BaseModel):
     deleted_song_id: uuid.UUID
@@ -42,3 +36,5 @@ class UpdatedSongResponse(BaseModel):
 class UpdateSongRequest(BaseModel):
     title: Optional[constr(min_length=1)]
     creator: Optional[constr(min_length=1)]
+    img_file: str
+    song_file: str

@@ -1,4 +1,6 @@
+import datetime
 from typing import Optional
+import uuid
 
 from pydantic import BaseModel
 
@@ -9,13 +11,20 @@ class TunedModel(BaseModel):
         orm_mode = True
 
 
+class LikedSong(TunedModel):
+    user_id: uuid.UUID
+    song_id: uuid.UUID
+
+
+class LikedSongModel(BaseModel):
+    user_id: uuid.UUID
+    song_id: uuid.UUID
+
+
 class ShowLikedSong(TunedModel):
     id: int
     title: str
     creator: str
     verified: Optional[bool]
-    is_liked: bool
-
-
-class LikedSong(BaseModel):
-    is_liked: Optional[bool]
+    album: Optional[str]
+    created_at: datetime.datetime

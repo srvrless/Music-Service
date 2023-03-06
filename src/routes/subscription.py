@@ -11,7 +11,7 @@ from src.api.payment import check_if_successful_payment
 from src.database.config import get_db
 from src.models.user import User
 from src.modules.subscription import set_subscription_user, delete_subscription_user, delete_expired_subscriptions
-from src.modules.user import get_user_by_id, get_current_user_from_token
+from src.modules.user import get_user_by_id, get_current_user_from_token, oauth2_scheme
 from src.schemas.user import UpdatePremiumStatus
 
 subscribe_router = APIRouter(tags=['subscribe'])
@@ -55,7 +55,7 @@ async def set_premium_subscriber(db: AsyncSession = Depends(get_db),
 
 
 @subscribe_router.delete("/delete_subscription")
-async def delete_sub(user_id: UUID, db: AsyncSession = Depends(get_db)):
+async def delete_sub(user_id: UUID, db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)):
     user = await get_user_by_id(user_id, db)
     try:
         updated_user_id = await delete_subscription_user(user_id=user_id, db=db)

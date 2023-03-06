@@ -5,7 +5,7 @@ from uuid import UUID
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.models.playlist import Subscription
+from src.models.subscription import Subscription
 
 
 class SubscriptionDAL:

@@ -13,6 +13,7 @@ google_router = APIRouter(tags=["auth_google"])
 GOOGLE_CLIENT_ID = "42683423809-js6evf69ea36budsv10dvt5d7vqa4dr6.apps.googleusercontent.com"
 templates = Jinja2Templates(directory="web/templates")
 
+
 async def create_user(user: CreateUserModel) -> User:
     _user = await User.objects.get_or_create(**user.dict(exclude={"token"}))
     return _user

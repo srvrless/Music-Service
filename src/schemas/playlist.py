@@ -1,5 +1,6 @@
+import uuid
 from pydantic import BaseModel
 
 
 class Playlist(BaseModel):
-    pass
+    song_id: uuid.UUID
