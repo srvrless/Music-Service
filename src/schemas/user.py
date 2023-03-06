@@ -20,23 +20,15 @@ class Google_Token(BaseModel):
     id: int
     token: str
 
-
-class ShowLogin(TunedModel):
-    username: str
-    hashed_password: str
-
-
 class ShowSignUp(TunedModel):
     user_id: Optional[int]
     nickname: str
-    email_address: str
+    email_address: EmailStr
     is_active: Optional[bool]
-    is_subscriber: Optional[bool]
-
 
 class SignUpModel(BaseModel):
     nickname: str
-    email_address: str
+    email_address: EmailStr
     password: str
 
     @validator("nickname")
@@ -46,6 +38,18 @@ class SignUpModel(BaseModel):
                 status_code=422, detail="nickname should contains only letters"
             )
         return value
+
+    @validator('password')
+    def password_validation(cls, password):
+        if not any(char.isupper() for char in password):
+            raise ValueError('Password must contain at least one uppercase letter')
+        if not any(char.islower() for char in password):
+            raise ValueError('Password must contain at least one lowercase letter')
+        if not any(char.isdigit() for char in password):
+            raise ValueError('Password must contain at least one digit')
+        if len(password) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        return password
 
 
 class CreateUserModel(SignUpModel):

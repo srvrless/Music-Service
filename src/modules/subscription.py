@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlalchemy import delete
 
 from src.layouts.dal_subscription import SubscriptionDAL
-from src.models.playlist import Subscription
+from src.models.subscription import Subscription
 
 
 async def set_subscription_user(user_id: UUID, db):

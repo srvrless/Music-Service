@@ -1,4 +1,4 @@
-from logging import getLogger
+
 from typing import Union
 from uuid import UUID
 
@@ -15,12 +15,11 @@ from src.schemas.user import SignUpModel
 from src.layouts.dal_user import UserDAL
 from src.utils.hashing import Hasher
 
-logger = getLogger(__name__)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 
-async def create_new_user(user: SignUpModel, db) -> ShowSignUp:
+async def create_new_user(user: SignUpModel, db: AsyncSession) -> ShowSignUp:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
@@ -38,7 +37,7 @@ async def create_new_user(user: SignUpModel, db) -> ShowSignUp:
 
 
 async def update_user(
-        updated_user_params: dict, user_id: UUID, db) -> Union[UUID, None]:
+        updated_user_params: dict, user_id: UUID, db: AsyncSession) -> Union[UUID, None]:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
@@ -48,7 +47,7 @@ async def update_user(
             return updated_user_id
 
 
-async def get_user_by_id(user_id: UUID, db) -> Union[ShowSignUp, None]:
+async def get_user_by_id(user_id: UUID, db: AsyncSession) -> Union[ShowSignUp, None]:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)
@@ -64,7 +63,7 @@ async def get_user_by_id(user_id: UUID, db) -> Union[ShowSignUp, None]:
                 )
 
 
-async def delete_user(user_id, db) -> Union[UUID, None]:
+async def delete_user(user_id, db: AsyncSession) -> Union[UUID, None]:
     async with db as session:
         async with session.begin():
             user_dal = UserDAL(session)

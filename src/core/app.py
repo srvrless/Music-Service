@@ -8,14 +8,13 @@ from fastapi_cache.backends.redis import RedisBackend
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.google_auth import google_router
-from src.api.router import router
 from src.database.config import get_db
 from src.routes.images import gif_router
-from src.routes.item import item_router
 from src.routes.payment import payment_router
 from src.routes.song import song_router
 from src.routes.subscription import subscribe_router, schedule_expired_subscriptions_cleanup
 from src.routes.user import user_router
+from src.routes.favorite_song_library import libary_router
 
 app = FastAPI(title="Nevless")
 
@@ -50,12 +49,11 @@ async def nevermore(request: Request, ):
 main_router = APIRouter()
 
 # set routes to the api instance
-app.include_router(router)
 app.include_router(gif_router)
 app.include_router(user_router)
-app.include_router(item_router)
 app.include_router(main_router)
 app.include_router(song_router)
+app.include_router(libary_router)
 app.include_router(google_router)
 app.include_router(payment_router)
 app.include_router(subscribe_router)

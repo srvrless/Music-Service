@@ -6,10 +6,12 @@ from sqlalchemy.orm import relationship
 
 from src.database.config import Base
 from src.models.liked_songs import LikedSong
-from src.models.playlist import Subscription
+from src.models.subscription import Subscription
+from src.models.song import Song
 
 # PlayList = PlayList()
 LikedSong = LikedSong()
+Song = Song()
 Subscription = Subscription()
 
 
@@ -25,7 +27,7 @@ class User(Base):
     # playlist = relationship('PlayList', backref='user')
 
     user = relationship('Subscription', backref='user')
-    liked = relationship('LikedSong', backref='user')
+    user_favorite = relationship('Song', backref='user', secondary='liked_song')
 
     def __repr__(self):
         return f'<User {self.nickname}'

@@ -5,8 +5,10 @@ from uuid import UUID
 from fastapi import UploadFile, HTTPException
 
 from src.layouts.dal_song import SongDAL
+from src.layouts.dal_favorite_song import FavoriteSongDAL
 from src.schemas.song import ShowSong
-from src.schemas.song import SongCreate
+from src.schemas.liked_song import LikedSongModel, ShowLikedSong
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 def is_song(filename: str) -> bool:
@@ -25,7 +27,7 @@ def upload_song(directory_name: str, song: UploadFile):
     # raise HTTPException(status_code=403, detail=f"Not valid type")
 
 
-async def create_new_song(title,creator, song_file, img_file, db):
+async def create_new_song(title, creator, song_file, img_file, db: AsyncSession):
     async with db as session:
         async with session.begin():
             song_dal = SongDAL(session)
@@ -39,10 +41,11 @@ async def create_new_song(title,creator, song_file, img_file, db):
                 title=title,
                 creator=creator,
                 song_file=song_file,
+                img_file=img_file
             )
 
 
-async def delete_sing(song_id, db) -> Union[UUID, None]:
+async def _delete_song(song_id, db) -> Union[UUID, None]:
     async with db as session:
         async with session.begin():
             song_dal = SongDAL(session)
@@ -80,17 +83,23 @@ async def get_song_by_id_(song_id, db) -> Union[ShowSong, None]:
 #                     creator=song.creator,
 #                     song_file=song.song_file,
 #                 )
-async def song_insert_to_liked(user_id, song_id, db) -> Union[ShowSong, None]:
+async def song_insert_to_libary(user_id, song_id, db) -> LikedSongModel:
     async with db as session:
         async with session.begin():
-            song_dal = SongDAL(session)
-            song = await song_dal.added_song_to_liked(
+            song_dal = FavoriteSongDAL(session)
+            song = await song_dal.added_song_to_favorite(
                 user_id=user_id,
                 song_id=song_id
             )
             if song is not None:
-                return ShowSong(
-                    name=song.name,
-                    creator=song.creator,
-                    song_file=song.song_file,
+                return LikedSongModel(
+                    user_id=user_id,
+                    song_id=song_id,
                 )
+
+
+async def get_all_songs_in_libary(db: AsyncSession)->ShowLikedSong:
+    async with db as session:
+        async with session.begin():
+            song_dal = FavoriteSongDAL(session)
+            return await song_dal.get_all_songs_in_libary()

@@ -17,11 +17,13 @@ from src.utils.jwt_token import create_access_token
 
 user_router = APIRouter(tags=['user'])
 
+
 # jwt authentication
 @user_router.post("/login", response_model=Token)
 async def jwt_login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     user = await authenticate_user(form_data.username, form_data.password, db)
     if not user:
+        logger.info("Incorrect nickname or password")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect nickname or password",
@@ -33,6 +35,7 @@ async def jwt_login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncS
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+
 # get data on user
 @user_router.get("/jwt_auth")
 async def sample_endpoint_under_jwt(
@@ -40,12 +43,13 @@ async def sample_endpoint_under_jwt(
 ):
     return {"Success": True, "current_user": current_user}
 
+
 # crete new user
 @user_router.post("/", response_model=ShowSignUp)
-async def create_user(body: SignUpModel, db: AsyncSession = Depends(get_db)) -> ShowSignUp:
+async def create_user(user: SignUpModel, db: AsyncSession = Depends(get_db)) -> ShowSignUp:
     try:
         logger.info("creating user")
-        return await create_new_user(body, db)
+        return await create_new_user(user, db)
 
     except IntegrityError as err:
         logger.error(err)
