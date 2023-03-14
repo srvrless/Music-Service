@@ -1,27 +1,47 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.tailwindcss.com"></script>
-    {% block head %}{% endblock %}
-    <title>Натрейдил</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/styles/main.css">
+    <title>Node JS</title>
 </head>
+
 <body>
-<nav class="flex justify-between text-3xl my-3">
-    <ul class="flex ml-10">
-        <li>Натрейдил</li>
-    </ul>
-    <ul class="flex gap-5 mr-10">
-        <li>Мой аккаунт</li>
-        <li>Выйти</li>
-    </ul>
-</nav>
-<hr>
-<div id="content">
-    {% block content %}{% endblock %}
-</div>
+
+    <header>
+        <nav>
+
+            <ul>
+                
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li class="profile-link">
+                    <a href="#">Profile</a>
+                </li>
+            </ul>
+            <form>
+                <input type="text" placeholder="Поиск...">
+                <button type="submit">Найти</button>
+            </form>
+        <ul>            </ul>
+        </nav>
+
+    </header>
+    <main>
+
+        <form class="dalle-input">
+            <label for="dalle-input">Введите текст для DALLE-2:</label>
+            <textarea id="dalle-input" name="dalle-input"></textarea>
+            <button type="submit">Отправить</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2023 My Website. All Rights Reserved.</p>
+    </footer>
 </body>
+
 </html>

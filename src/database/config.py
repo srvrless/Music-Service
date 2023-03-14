@@ -17,8 +17,6 @@ engine = create_async_engine(
 )
 
 # create session for the interaction with database
-
-
 async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
 

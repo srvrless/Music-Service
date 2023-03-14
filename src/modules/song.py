@@ -70,19 +70,21 @@ async def get_song_by_id_(song_id, db) -> Union[ShowSong, None]:
                 )
 
 
-# async def song_insert_playlist(song_id, db) -> Union[ShowSong, None]:
-#     async with db as session:
-#         async with session.begin():
-#             song_dal = SongDAL(session)
-#             song = await song_dal.get_song_by_id(
-#                 song_id=song_id,
-#             )
-#             if song is not None:
-#                 return ShowSong(
-#                     name=song.name,
-#                     creator=song.creator,
-#                     song_file=song.song_file,
-#                 )
+async def song_insert_playlist(song_id, db) -> Union[ShowSong, None]:
+    async with db as session:
+        async with session.begin():
+            song_dal = SongDAL(session)
+            song = await song_dal.get_song_by_id(
+                song_id=song_id,
+            )
+            if song is not None:
+                return ShowSong(
+                    name=song.name,
+                    creator=song.creator,
+                    song_file=song.song_file,
+                )
+
+
 async def song_insert_to_libary(user_id, song_id, db) -> LikedSongModel:
     async with db as session:
         async with session.begin():
@@ -98,7 +100,7 @@ async def song_insert_to_libary(user_id, song_id, db) -> LikedSongModel:
                 )
 
 
-async def get_all_songs_in_libary(db: AsyncSession)->ShowLikedSong:
+async def get_all_songs_in_libary(db: AsyncSession) -> ShowLikedSong:
     async with db as session:
         async with session.begin():
             song_dal = FavoriteSongDAL(session)

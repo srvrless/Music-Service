@@ -31,14 +31,9 @@ async def startup_event(db: AsyncSession = Depends(get_db)):
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
 
 
-# app.openapi = custom_openapi(app)
-# @AuthJWT.load_config
-# def get_config():
-#     return Settings()
-
 @app.get('/home')
 async def get_article(request: Request, ):
-    return templates.TemplateResponse('login_and_register.html', {"request": request})
+    return templates.TemplateResponse('base.html', {"request": request})
 
 
 @app.get('/never')

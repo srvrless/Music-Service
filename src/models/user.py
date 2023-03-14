@@ -9,7 +9,7 @@ from src.models.liked_songs import LikedSong
 from src.models.subscription import Subscription
 from src.models.song import Song
 
-# PlayList = PlayList()
+
 LikedSong = LikedSong()
 Song = Song()
 Subscription = Subscription()
@@ -22,10 +22,7 @@ class User(Base):
     nickname = Column(String, nullable=False, unique=True)
     email_address = Column(String, nullable=False, unique=True)
     is_active = Column(Boolean(), default=True)
-
     hashed_password = Column(String, nullable=False)
-    # playlist = relationship('PlayList', backref='user')
-
     user = relationship('Subscription', backref='user')
     user_favorite = relationship('Song', backref='user', secondary='liked_song')
 
