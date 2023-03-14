@@ -99,9 +99,3 @@ async def update_user_by_id(user_id: UUID, body: UpdateUserRequest, db: AsyncSes
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
     return UpdatedUserResponse(updated_user_id=updated_user_id)
-
-    # return {"Success": True, "current_user": db.user_id}
-
-# @user_router.post('/update_profile_image', response_model=create_upload_file)
-# async def update_photo():
-#     pass

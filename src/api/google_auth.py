@@ -38,3 +38,5 @@ async def google_auth(request: Request):
 async def google_auth(user: CreateUserModel):
     id, token = await google_auth(user)
     return Google_Token(user_id=id, token=token)
+
+
